@@ -32,23 +32,30 @@ function SWEP:PrimaryAttack()
 	self:Electroshock()
 end
 
+function SWEP:SecondaryAttack()
+
+end
 
 function SWEP:Electroshock()
 	local owner = self:GetOwner()
 
-	
 	if ( not owner:IsValid() ) then return end
+	
+	local target = owner:GetEyeTrace().Entity	
+	if (target:IsPlayer()) then
+		self:EmitSound( self.ShootSound )
 
-	self:EmitSound( self.ShootSound )
+		if (SERVER) then
+    	
+			// DEBUG
+    		// print(type(target))
+   			// print(target)
 
-
-    local target = owner:GetEyeTrace().Entity
-	-- DEBUG
-    print(type(target))
-    print(target)
-	-- Find the target's position, kill them silently, spawn them, and teleport them.
-    local targetPos = target.GetPos(target)
-    target.KillSilent()
-    target.Spawn()
-    target.SetPos(targetPos)
+			// Find the target's position, kill them silently, spawn them, and teleport them.
+    		local targetPos = target:GetPos()
+    		target:KillSilent()
+    		target:Spawn()
+    		target:SetPos(targetPos)
+		end
+	end
 end 
