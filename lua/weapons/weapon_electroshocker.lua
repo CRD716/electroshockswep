@@ -1,5 +1,8 @@
 AddCSLuaFile()
 
+// Set this to true if you need additional logs/don't mind it showing
+local publicKills = false
+
 SWEP.PrintName = "Electroshock Tool"
 SWEP.Author = "CRD716"
 SWEP.Instructions = "Left click to perform electroshock."
@@ -40,7 +43,7 @@ function SWEP:Electroshock()
 	local owner = self:GetOwner()
 
 	if ( not owner:IsValid() ) then return end
-	
+
 	local target = owner:GetEyeTrace().Entity	
 	if (target:IsPlayer()) then
 		self:EmitSound( self.ShootSound )
@@ -51,9 +54,14 @@ function SWEP:Electroshock()
     		// print(type(target))
    			// print(target)
 
-			// Find the target's position, kill them silently, spawn them, and teleport them.
+			// Find the target's position, kill them (silently), spawn them, and teleport them.
     		local targetPos = target:GetPos()
-    		target:KillSilent()
+			if (publicKills) then
+    			target:Kill()
+			else
+				target:KillSilent()
+			end
+
     		target:Spawn()
     		target:SetPos(targetPos)
 		end
